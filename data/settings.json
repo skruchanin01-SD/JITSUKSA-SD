@@ -4,7 +4,7 @@
   "termKey": "2569-T1",
   "weekKey": "W07",
   "sessionId": "2569-T1-W07",
-  "systemOpen": false,
+  "systemOpen": true,
 "closedMessage": "ระบบปิดรับการสวดมนต์ประจำสัปดาห์นี้แล้ว",
   "passScore": 70,
   "gasApiUrl": "https://script.google.com/macros/s/AKfycbywr5IBuWs532mO6h5B7nI3k9Dxbfu0zT7aObdkFeslL47i4Yy77LYMgmswMaC34TE1sA/exec",
