@@ -103,33 +103,10 @@ function bindGlobalEvents(){
 }
 
 function renderHome(){
-  const s = state.settings || {};
-  const isSystemOpen = s.systemOpen !== false && String(s.systemOpen).toLowerCase() !== 'false';
-
+  const s = state.settings;
   $('schoolName').textContent = s.schoolName || 'โรงเรียน';
   $('systemName').textContent = s.systemName || 'ระบบสวดมนต์สรภัญญะ';
-
-  const startBtn = $('btnStartGate');
-
-  if (isSystemOpen) {
-    $('homeStatus').textContent = `ภาคเรียน ${s.termKey || '-'} | สัปดาห์ ${s.weekKey || '-'} | หน้าเว็บโหลดจาก GitHub Pages`;
-
-    if (startBtn) {
-      startBtn.disabled = false;
-      startBtn.textContent = 'เริ่มสวดมนต์';
-      startBtn.classList.remove('disabled');
-    }
-
-  } else {
-    $('homeStatus').textContent = s.closedMessage || 'ระบบปิดรับการสวดมนต์ชั่วคราว';
-
-    if (startBtn) {
-      startBtn.disabled = true;
-      startBtn.textContent = 'ปิดระบบชั่วคราว';
-      startBtn.classList.add('disabled');
-    }
-  }
-
+  $('homeStatus').textContent = `ภาคเรียน ${s.termKey} | สัปดาห์ ${s.weekKey} | หน้าเว็บโหลดจาก GitHub Pages`;
   const h = state.homeSummary || {};
   $('termTotalScore').textContent = fmt(h.termTotalScore || 0);
   $('totalSubmitted').textContent = fmt(h.totalSubmitted || 0);
@@ -180,41 +157,11 @@ function renderBrowserGate(gate){
 }
 
 async function startGate(){
-  const s = state.settings || {};
-  const isSystemOpen = s.systemOpen !== false && String(s.systemOpen).toLowerCase() !== 'false';
-
-  if (!isSystemOpen) {
-    alert(s.closedMessage || 'ระบบปิดรับการสวดมนต์ชั่วคราว');
-    renderHome();
-    showView('home');
-    return;
-  }
-
   const gate = detectBrowserGate();
-
-  if (!gate.isSupported) {
+  if(!gate.isSupported){
     renderBrowserGate(gate);
     return;
   }
-
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    alert('Browser นี้ไม่รองรับการใช้ไมโครโฟน กรุณาใช้ Chrome หรือ Safari');
-    return;
-  }
-
-  $('browserGate').classList.add('hidden');
-
-  try {
-    await loadStudentAndChantData();
-    setupStudentSelectors();
-    showView('select');
-  } catch (err) {
-    alert('โหลดข้อมูลไม่สำเร็จ: ' + err.message);
-    showView('home');
-  }
-}
-
-  const gate = detectBrowserGate();
   if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
     alert('Browser นี้ไม่รองรับการใช้ไมโครโฟน กรุณาใช้ Chrome หรือ Safari');
     return;
