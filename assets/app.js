@@ -106,7 +106,7 @@ function renderHome(){
   const s = state.settings;
   $('schoolName').textContent = s.schoolName || 'โรงเรียน';
   $('systemName').textContent = s.systemName || 'ระบบสวดมนต์สรภัญญะ';
-  $('homeStatus').textContent = `ภาคเรียน ${s.termKey} | สัปดาห์ ${s.weekKey} | หน้าเว็บโหลดจาก GitHub Pages`;
+  $('homeStatus').textContent = `ภาคเรียน ${s.termKey} | สัปดาห์ ${s.weekKey} | Devby Teacher Chanin Sunapan`;
   const h = state.homeSummary || {};
   $('termTotalScore').textContent = fmt(h.termTotalScore || 0);
   $('totalSubmitted').textContent = fmt(h.totalSubmitted || 0);
