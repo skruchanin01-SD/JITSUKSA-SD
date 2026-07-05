@@ -104,19 +104,20 @@ function bindGlobalEvents(){
 
 function renderHome(){
   const s = state.settings;
+  const isSystemOpen = s.systemOpen !== false && String(s.systemOpen).toLowerCase() !== 'false';
+
   $('schoolName').textContent = s.schoolName || 'โรงเรียน';
   $('systemName').textContent = s.systemName || 'ระบบสวดมนต์สรภัญญะ';
-  $('homeStatus').textContent = `ภาคเรียน ${s.termKey} | สัปดาห์ ${s.weekKey} | หน้าเว็บโหลดจาก GitHub Pages`;
-  const h = state.homeSummary || {};
-  $('termTotalScore').textContent = fmt(h.termTotalScore || 0);
-  $('totalSubmitted').textContent = fmt(h.totalSubmitted || 0);
-  $('bestLevel').textContent = h.bestLevel || '-';
-  $('bestLevelScore').textContent = `${Number(h.bestLevelScore || 0).toFixed(2)} คะแนน`;
-  $('bestRoom').textContent = h.bestRoom || '-';
-  $('bestRoomScore').textContent = `${Number(h.bestRoomScore || 0).toFixed(2)} คะแนน`;
-  $('summaryUpdatedAt').textContent = h.updatedAt || 'Snapshot';
-  renderTop10($('top10List'), h.top10 || []);
-}
+
+  if (isSystemOpen) {
+    $('homeStatus').textContent = `ภาคเรียน ${s.termKey} | สัปดาห์ ${s.weekKey} | หน้าเว็บโหลดจาก GitHub Pages`;
+    $('btnStartGate').disabled = false;
+    $('btnStartGate').textContent = 'เริ่มสวดมนต์';
+  } else {
+    $('homeStatus').textContent = s.closedMessage || 'ระบบปิดรับการสวดมนต์ชั่วคราว';
+    $('btnStartGate').disabled = true;
+    $('btnStartGate').textContent = 'ปิดระบบชั่วคราว';
+  }
 
 function showView(name){
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -157,11 +158,15 @@ function renderBrowserGate(gate){
 }
 
 async function startGate(){
-  const gate = detectBrowserGate();
-  if(!gate.isSupported){
-    renderBrowserGate(gate);
+  const s = state.settings || {};
+  const isSystemOpen = s.systemOpen !== false && String(s.systemOpen).toLowerCase() !== 'false';
+
+  if (!isSystemOpen) {
+    alert(s.closedMessage || 'ระบบปิดรับการสวดมนต์ชั่วคราว');
     return;
   }
+
+  const gate = detectBrowserGate();
   if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
     alert('Browser นี้ไม่รองรับการใช้ไมโครโฟน กรุณาใช้ Chrome หรือ Safari');
     return;
